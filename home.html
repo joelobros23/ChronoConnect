@@ -4,10 +4,128 @@
 	<meta charset='UTF-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 	<title>ChronoConnect</title>
-	<script src='[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)'></script>
+	<script src='https://cdn.tailwindcss.com'></script>
 	<link rel='stylesheet' href='assets/css/style.css'>
 </head>
 <body class='bg-gray-100'>
-	<!-- Content for home.html -->
+	<!-- Navbar -->
+	<div id='navbar-container'></div>
+
+	<div class='container mx-auto mt-8'>
+		<!-- Post Creation Form -->
+		<div class='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'>
+			<h2 class='block text-gray-700 text-lg font-bold mb-2'>Create a Memory</h2>
+			<form id='createPostForm'>
+				<div class='mb-4'>
+					<label class='block text-gray-700 text-sm font-bold mb-2' for='postContent'>
+						Memory
+					</label>
+					<textarea
+						class='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+						id='postContent'
+						name='postContent'
+						placeholder='What do you remember?'
+						rows='4'></textarea>
+				</div>
+				<div class='mb-4'>
+					<label class='block text-gray-700 text-sm font-bold mb-2' for='postDate'>
+						Date
+					</label>
+					<input
+						class='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+						id='postDate'
+						name='postDate'
+						type='date'
+						placeholder='Date of the memory'></input>
+				</div>
+				<div class='flex items-center justify-between'>
+					<button
+						class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+						type='submit'>
+						Share Memory
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<!-- Posts Feed -->
+		<div id='posts-container'>
+			<!-- Posts will be loaded here -->
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<div id='footer-container'></div>
+
+	<script src='assets/js/main.js'></script>
+	<script>
+		// Load Navbar and Footer
+		fetch('components/navbar.html')
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById('navbar-container').innerHTML = data;
+			});
+
+		fetch('components/footer.html')
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById('footer-container').innerHTML = data;
+			});
+
+		// Post creation form submission
+		document.getElementById('createPostForm').addEventListener('submit', function (event) {
+			event.preventDefault();
+
+			const postContent = document.getElementById('postContent').value;
+			const postDate = document.getElementById('postDate').value;
+
+			// Send data to API
+			fetch('api/create_post.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ content: postContent, date: postDate })
+			})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						alert('Memory shared successfully!');
+						// Optionally, refresh the posts feed
+						// loadPosts(); // Assuming you have a loadPosts function
+						document.getElementById('postContent').value = '';
+						document.getElementById('postDate').value = '';
+					} else {
+						alert('Failed to share memory: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('An error occurred while sharing the memory.');
+				});
+		});
+
+		// Example function to load posts (replace with your actual implementation)
+		function loadPosts() {
+			fetch('api/get_posts.php')
+				.then(response => response.json())
+				.then(data => {
+					let postsHTML = '';
+					data.forEach(post => {
+						postsHTML += `
+                            <div class='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'>
+                                <p>${post.content}</p>
+                                <p>Date: ${post.date}</p>
+                            </div>
+                        `;
+					});
+					document.getElementById('posts-container').innerHTML = postsHTML;
+				})
+				.catch(error => console.error('Error fetching posts:', error));
+		}
+
+		// Call loadPosts initially
+		loadPosts();
+	</script>
 </body>
 </html>
