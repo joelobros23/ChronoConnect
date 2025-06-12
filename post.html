@@ -3,11 +3,151 @@
 <head>
 	<meta charset='UTF-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-	<title>ChronoConnect</title>
-	<script src='[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)'></script>
+	<title>ChronoConnect - Post</title>
+	<script src='https://cdn.tailwindcss.com'></script>
 	<link rel='stylesheet' href='assets/css/style.css'>
 </head>
 <body class='bg-gray-100'>
-	<!-- Content for post.html -->
+	<!-- Navbar -->
+	<div id="navbar-container"></div>
+
+	<div class='container mx-auto mt-8 p-4 bg-white shadow-md rounded-lg'>
+		<h1 class='text-2xl font-semibold mb-4'>Post Details</h1>
+
+		<div id="post-container" class="mb-4">
+			<!-- Post content will be loaded here -->
+		</div>
+
+		<div id="comment-section" class="mt-4">
+			<h2 class="text-xl font-semibold mb-2">Comments</h2>
+			<div id="comments-container">
+				<!-- Comments will be loaded here -->
+			</div>
+
+			<div class="mt-4">
+				<h3 class="text-lg font-semibold mb-2">Add a Comment</h3>
+				<textarea id="comment-content" class="w-full p-2 border rounded-md" rows="3" placeholder="Write your comment..."></textarea>
+				<button id="submit-comment" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">Submit Comment</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<div id="footer-container"></div>
+
+	<script src='assets/js/main.js'></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', async () => {
+			// Load Navbar and Footer
+			loadComponent('components/navbar.html', 'navbar-container');
+			loadComponent('components/footer.html', 'footer-container');
+
+			// Get post ID from URL
+			const urlParams = new URLSearchParams(window.location.search);
+			const postId = urlParams.get('id');
+
+			if (!postId) {
+				alert('Post ID is missing.');
+				return;
+			}
+
+			// Fetch post details
+			const fetchPost = async (postId) => {
+				try {
+					const response = await fetch(`api/get_posts.php?id=${postId}`);
+					const data = await response.json();
+
+					if (data && data.posts && data.posts.length > 0) {
+						const post = data.posts[0]; // Assuming only one post is returned
+
+						const postElement = document.getElementById('post-container');
+						postElement.innerHTML = `
+							<div class="p-4 border rounded-md mb-2">
+								<p class="text-gray-600">Date: ${post.date}</p>
+								<p>${post.content}</p>
+								<p>Likes: ${post.likes}</p>
+							</div>
+						`;
+					} else {
+						document.getElementById('post-container').innerHTML = '<p>Post not found.</p>';
+					}
+				} catch (error) {
+					console.error('Error fetching post:', error);
+					document.getElementById('post-container').innerHTML = '<p>Error loading post.</p>';
+				}
+			};
+
+			// Fetch comments for the post
+			const fetchComments = async (postId) => {
+				try {
+					const response = await fetch(`api/get_comments.php?post_id=${postId}`);
+					const comments = await response.json();
+
+					const commentsContainer = document.getElementById('comments-container');
+					commentsContainer.innerHTML = ''; // Clear existing comments
+
+					if (comments && comments.length > 0) {
+						comments.forEach(comment => {
+							const commentElement = document.createElement('div');
+							commentElement.classList.add('p-2', 'border', 'rounded-md', 'mb-2');
+							commentElement.innerHTML = `
+								<p><strong>User:</strong> ${comment.username}</p>
+								<p>${comment.content}</p>
+							`;
+							commentsContainer.appendChild(commentElement);
+						});
+					} else {
+						commentsContainer.innerHTML = '<p>No comments yet.</p>';
+					}
+				} catch (error) {
+					console.error('Error fetching comments:', error);
+					document.getElementById('comments-container').innerHTML = '<p>Error loading comments.</p>';
+				}
+			};
+
+			// Handle comment submission
+			const submitComment = async (postId, content) => {
+				try {
+					const response = await fetch('api/create_comment.php', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({
+							post_id: postId,
+							content: content
+						})
+					});
+
+					const data = await response.json();
+
+					if (data.success) {
+						// Refresh comments after successful submission
+						fetchComments(postId);
+						document.getElementById('comment-content').value = ''; // Clear the textarea
+					} else {
+						alert('Error submitting comment: ' + data.message);
+					}
+				} catch (error) {
+					console.error('Error submitting comment:', error);
+					alert('Error submitting comment.');
+				}
+			};
+
+			// Load post and comments on page load
+			await fetchPost(postId);
+			await fetchComments(postId);
+
+			// Add event listener to the submit button
+			document.getElementById('submit-comment').addEventListener('click', async () => {
+				const commentContent = document.getElementById('comment-content').value;
+				if (commentContent.trim() !== '') {
+					await submitComment(postId, commentContent);
+				} else {
+					alert('Please enter a comment.');
+				}
+			});
+		});
+	</script>
 </body>
 </html>
