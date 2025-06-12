@@ -4,10 +4,37 @@
 	<meta charset='UTF-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 	<title>ChronoConnect</title>
-	<script src='[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)'></script>
+	<script src='https://cdn.tailwindcss.com'></script>
 	<link rel='stylesheet' href='assets/css/style.css'>
 </head>
 <body class='bg-gray-100'>
-	<!-- Content for index.html -->
+	<!-- Landing Page Content -->
+	<div class='container mx-auto py-20'>
+		<header class='text-center mb-12'>
+			<h1 class='text-5xl font-bold text-gray-800'>ChronoConnect</h1>
+			<p class='text-xl text-gray-600 mt-4'>Connect Through Time, Share Your Moments</p>
+		</header>
+
+		<section class='grid grid-cols-1 md:grid-cols-2 gap-8 items-center'>
+			<div class='text-center md:text-left'>
+				<h2 class='text-3xl font-semibold text-gray-700 mb-4'>Remember, Relive, Reconnect</h2>
+				<p class='text-lg text-gray-500 mb-8'>
+					ChronoConnect is a social platform where you can share your memories, connect with friends, and explore shared moments in time.
+				</p>
+				<div class='space-x-4'>
+					<a href='register.html' class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
+						Register
+					</a>
+					<a href='login.html' class='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'>
+						Login
+					</a>
+				</div>
+			</div>
+			<div>
+				<img src='https://images.unsplash.com/photo-1508782924276-3c9369e0ae2f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80' alt='ChronoConnect Image' class='rounded-lg shadow-md'>
+			</div>
+		</section>
+	</div>
+	<components/footer.html>
 </body>
 </html>
