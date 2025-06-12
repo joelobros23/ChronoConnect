@@ -1,13 +1,41 @@
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-	<meta charset='UTF-8'>
-	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-	<title>ChronoConnect</title>
-	<script src='[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)'></script>
-	<link rel='stylesheet' href='assets/css/style.css'>
-</head>
-<body class='bg-gray-100'>
-	<!-- Content for components/navbar.html -->
-</body>
-</html>
+<nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <a class="text-gray-800 font-bold text-xl" href="home.html">ChronoConnect</a>
+            </div>
+            <div class="flex items-center">
+                <div class="mr-4">
+                    <a href="home.html" class="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="profile.html" class="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                    <a href="friends.html" class="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Friends</a>
+                    <a href="search.html" class="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Search</a>
+                </div>
+                <div class="ml-4">
+                    <button id="logoutButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<script>
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        fetch('api/logout.php', {
+            method: 'POST',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = 'login.html';
+            } else {
+                alert('Logout failed: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Logout failed. Please try again.');
+        });
+    });
+</script>
