@@ -3,11 +3,36 @@
 <head>
 	<meta charset='UTF-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-	<title>ChronoConnect</title>
-	<script src='[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)'></script>
+	<title>ChronoConnect - Friends</title>
+	<script src='https://cdn.tailwindcss.com'></script>
 	<link rel='stylesheet' href='assets/css/style.css'>
 </head>
 <body class='bg-gray-100'>
-	<!-- Content for friends.html -->
+	<!-- Navbar -->
+	<div id='navbar-container'></div>
+
+	<div class='container mx-auto py-8'>
+		<h1 class='text-2xl font-bold mb-4'>Friends</h1>
+
+		<div id='friend-list' class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+			<!-- Friend list will be populated here -->
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<div id='footer-container'></div>
+
+	<script src='assets/js/main.js'></script>
+	<script src='assets/js/friends.js'></script>
+	<script>
+		// Load Navbar and Footer
+		loadNavbar();
+		loadFooter();
+
+		// Fetch and display friends on page load
+		document.addEventListener('DOMContentLoaded', () => {
+			fetchFriends();
+		});
+	</script>
 </body>
 </html>
