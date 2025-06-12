@@ -92,7 +92,7 @@
 					if (data.success) {
 						alert('Memory shared successfully!');
 						// Optionally, refresh the posts feed
-						// loadPosts(); // Assuming you have a loadPosts function
+						loadPosts(); // Assuming you have a loadPosts function
 						document.getElementById('postContent').value = '';
 						document.getElementById('postDate').value = '';
 					} else {
@@ -114,8 +114,10 @@
 					data.forEach(post => {
 						postsHTML += `
                             <div class='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4'>
+								<p class='text-gray-800 font-bold'>${post.username}</p>
                                 <p>${post.content}</p>
                                 <p>Date: ${post.date}</p>
+								<p>Created At: ${post.created_at}</p>
                             </div>
                         `;
 					});
