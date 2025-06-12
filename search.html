@@ -3,11 +3,54 @@
 <head>
 	<meta charset='UTF-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
-	<title>ChronoConnect</title>
-	<script src='[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)'></script>
+	<title>ChronoConnect - Search</title>
+	<script src='https://cdn.tailwindcss.com'></script>
 	<link rel='stylesheet' href='assets/css/style.css'>
 </head>
 <body class='bg-gray-100'>
-	<!-- Content for search.html -->
+	<!-- Navbar -->
+	<div id='navbar-container'></div>
+
+	<div class='container mx-auto py-8'>
+		<h1 class='text-2xl font-bold mb-4'>Search Users</h1>
+
+		<div class='mb-4'>
+			<input type='text' id='search-input' placeholder='Enter username' class='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'>
+			<button id='search-button' class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2'>Search</button>
+		</div>
+
+		<div id='search-results'>
+			<!-- Search results will be displayed here -->
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<div id='footer-container'></div>
+
+	<script src='assets/js/main.js'></script>
+	<script src='assets/js/search.js'></script>
+	<script>
+		// Load Navbar and Footer
+		document.addEventListener('DOMContentLoaded', () => {
+			loadNavbar();
+			loadFooter();
+		});
+
+		function loadNavbar() {
+			fetch('components/navbar.html')
+				.then(response => response.text())
+				.then(data => {
+					document.getElementById('navbar-container').innerHTML = data;
+				});
+		}
+
+		function loadFooter() {
+			fetch('components/footer.html')
+				.then(response => response.text())
+				.then(data => {
+					document.getElementById('footer-container').innerHTML = data;
+				});
+		}
+	</script>
 </body>
 </html>
